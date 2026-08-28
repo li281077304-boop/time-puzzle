@@ -1,0 +1,24 @@
+# Gradle / build outputs
+.gradle/
+build/
+**/build/
+
+# Local SDK / local config
+local.properties
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+*.ipr
+*.iws
+.DS_Store
+
+# Keystores / signing
+*.jks
+*.keystore
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
