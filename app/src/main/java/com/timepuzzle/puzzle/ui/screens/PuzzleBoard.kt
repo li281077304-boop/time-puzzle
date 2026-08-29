@@ -68,7 +68,6 @@ fun PuzzleBoard(
         }
 
         val engine = session.engine ?: run { Box(Modifier.fillMaxSize()); return@BoxWithConstraints }
-        val version = session.version
         val newlyHomeIDs = session.newlyHomeIDs
         val newlyJoinedIDs = session.newlyJoinedIDs
 
@@ -102,7 +101,6 @@ fun PuzzleBoard(
                     val dragging = draggingIDs.contains(piece.id)
                     val ox = (piece.position.x - tileW / 2 + if (dragging) dragOffset.x else 0f)
                     val oy = (piece.position.y - tileH / 2 + if (dragging) dragOffset.y else 0f)
-                    val isAtHome = piece.position.distance(piece.homePosition) <= 0.5
                     // 连接边必须以双方任一边的连接状态为准。中途恢复或
                     // 拖动时，另一块已经标记连接而这一块尚未重组的短暂帧
                     // 也不能画出白色内缝。
@@ -147,12 +145,9 @@ fun PuzzleBoard(
                             // 拼块圆润；连接后共享边自动隐藏，形成无缝整体。
                             .drawWithContent {
                                 drawContent()
-                                // 【写死规则】拼好的图（session 完成态）必须无缝无中缝：内部接缝边不画分割线。
-                                val isComplete = session.isComplete
                                 // 双层细边框：黑边中心压在块边缘（半内半外）→ 相邻拼块紧贴
-                                // 时两块黑线重合为「一条」细分割线；白线只在图片内部 inset 提亮
-                                // 隔离。每条边都画（含已连接边）→ 拼好后仍是一条细线分块而非
-                                // 无缝全图；内部接缝角直角、四块交汇无节点。
+                                // 时两块黑线重合为「一条」细分割线；白线只在图片内部 inset 提亮。
+                                // 只绘制合成组的外轮廓：任一共享边一旦连接，黑线和白线都立即消失。
                                 val R = radiusPx
                                 val w = size.width
                                 val h = size.height
@@ -165,12 +160,11 @@ fun PuzzleBoard(
                                 fun drawLayer(i: Float, width: Float, color: Color) {
                                     val r = (R - i).coerceAtLeast(0f)
                                     val arc = Size(2 * r, 2 * r)
-                                    // 【写死规则】外轮廓边（未连接）始终画；内部接缝边（已连接）仅在
-                                    // 「拼图未完成」时画。完成态不画 → 拼好的图无缝无中缝，是一张完整图片。
-                                    val drawTop = !joinedTop || !isComplete
-                                    val drawBottom = !joinedBottom || !isComplete
-                                    val drawLeft = !joinedLeft || !isComplete
-                                    val drawRight = !joinedRight || !isComplete
+                                    // 合成后的共享边不依赖整局完成状态，立即不绘制。
+                                    val drawTop = !joinedTop
+                                    val drawBottom = !joinedBottom
+                                    val drawLeft = !joinedLeft
+                                    val drawRight = !joinedRight
                                     val xLt = if (!(joinedTop || joinedLeft)) r else 0f
                                     val xRt = if (!(joinedTop || joinedRight)) w - r else w
                                     if (drawTop) drawLine(color, Offset(xLt, i), Offset(xRt, i), strokeWidth = width)        // 顶
@@ -214,7 +208,6 @@ fun PuzzleBoard(
                             piece = piece,
                             bitmap = tileBitmaps[piece.id],
                             shouldFlash = newlyHomeIDs.contains(piece.id) || newlyJoinedIDs.contains(piece.id),
-                            isAtHome = isAtHome
                         )
                     }
                 }
@@ -243,8 +236,7 @@ private fun joinedOnEitherSide(
 private fun TileContent(
     piece: com.timepuzzle.puzzle.model.PuzzlePieceState,
     bitmap: ImageBitmap?,
-    shouldFlash: Boolean,
-    isAtHome: Boolean
+    shouldFlash: Boolean
 ) {
     // 闪烁动画：放对或接续时短暂高亮（只闪本步新变化的图块）
     val flashScale = remember { Animatable(1f) }
