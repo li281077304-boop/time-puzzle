@@ -63,7 +63,7 @@ fun LevelMapScreen(nav: NavHostController, appVm: GameAppViewModel, onSettings: 
                     Row(Modifier.fillMaxWidth()) {
                         rowLevels.forEach { level ->
                             LevelCard(level = level, context = context, appVm = appVm, onClick = {
-                                if (appVm.isUnlocked(level) && appVm.canStart(level)) {
+                                if (appVm.isUnlocked(level) && appVm.canStart()) {
                                     appVm.start(level)
                                     nav.navigate("game/${level.id}")
                                 }

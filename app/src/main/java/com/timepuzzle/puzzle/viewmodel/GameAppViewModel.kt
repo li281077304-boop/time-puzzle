@@ -27,16 +27,20 @@ class GameAppViewModel(app: Application) : AndroidViewModel(app) {
 
     fun isUnlocked(level: LevelDefinition): Boolean {
         _progress.value = _progress.value.refreshEnergy()
-        return _progress.value.isUnlocked(level)
+        val completedInGroup = levels.count { candidate ->
+            candidate.groupName == level.groupName &&
+                _progress.value.completedLevels[candidate.id]?.isCompleted == true
+        }
+        return level.unlockRequirement == 0 || completedInGroup >= level.unlockRequirement
     }
 
-    fun canStart(level: LevelDefinition): Boolean {
+    fun canStart(): Boolean {
         _progress.value = _progress.value.refreshEnergy()
         return _progress.value.settings.unlimitedEnergy || _progress.value.energy > 0
     }
 
     fun start(level: LevelDefinition) {
-        if (!isUnlocked(level) || !canStart(level)) return
+        if (!isUnlocked(level) || !canStart()) return
         val current = _progress.value
         if (!current.settings.unlimitedEnergy) {
             _progress.value = current.copy(

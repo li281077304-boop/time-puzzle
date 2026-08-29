@@ -179,6 +179,7 @@ fun PuzzleGameScreen(nav: NavHostController, appVm: GameAppViewModel, levelId: I
             LaunchedEffect(next?.id) {
                 if (next != null) {
                     delay(2500)
+                    appVm.finish(level, session.elapsed, session.engine?.moveCount ?: 0)
                     appVm.start(next)
                     nav.navigate("game/${next.id}") {
                         popUpTo("game/${level.id}") { inclusive = true }
