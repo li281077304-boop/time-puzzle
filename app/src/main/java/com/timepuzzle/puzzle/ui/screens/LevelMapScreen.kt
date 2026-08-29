@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.timepuzzle.puzzle.model.LevelDefinition
 import com.timepuzzle.puzzle.model.PuzzlePieceID
-import com.timepuzzle.puzzle.ui.loadFullBitmap
+import com.timepuzzle.puzzle.ui.loadThumbnailBitmap
 import com.timepuzzle.puzzle.ui.theme.*
 import com.timepuzzle.puzzle.viewmodel.GameAppViewModel
 
@@ -55,11 +56,14 @@ fun LevelMapScreen(nav: NavHostController, appVm: GameAppViewModel, onSettings: 
             modifier = Modifier.fillMaxSize().padding(padding).padding(12.dp)
         ) {
             groups.forEach { (groupName, groupLevels) ->
-                item {
+                item(key = "header_$groupName") {
                     Text(groupName, style = MaterialTheme.typography.titleMedium,
                         color = BrownDark, modifier = Modifier.padding(vertical = 8.dp))
                 }
-                items(groupLevels.chunked(2)) { rowLevels ->
+                items(
+                    items = groupLevels.chunked(2),
+                    key = { rowLevels -> "row_${rowLevels.joinToString("_") { it.id.toString() }}" }
+                ) { rowLevels ->
                     Row(Modifier.fillMaxWidth()) {
                         rowLevels.forEach { level ->
                             LevelCard(level = level, context = context, appVm = appVm, onClick = {
@@ -86,7 +90,9 @@ fun LevelCard(
 ) {
     val unlocked = appVm.isUnlocked(level)
     val completed = appVm.progress.completedLevels[level.id]?.isCompleted == true
-    val bmp = remember(level.image) { loadFullBitmap(context, level.image) }
+    val bmp by produceState<ImageBitmap?>(initialValue = null, level.image) {
+        value = loadThumbnailBitmap(context.applicationContext, level.image, targetPx = 256)
+    }
     val ph = TilePlaceholder[level.id % TilePlaceholder.size]
 
     Card(
@@ -96,10 +102,10 @@ fun LevelCard(
         border = BorderStroke(1.5.dp, Brown.copy(0.4f))
     ) {
         Box(Modifier.fillMaxSize()) {
-            if (bmp != null) {
-                Image(bmp, null, contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+            bmp?.let { thumbnail ->
+                Image(thumbnail, null, contentScale = androidx.compose.ui.layout.ContentScale.Crop,
                     modifier = Modifier.fillMaxSize().padding(8.dp).clip(RoundedCornerShape(10.dp)))
-            } else {
+            } ?: run {
                 Box(Modifier.fillMaxSize().background(ph).padding(8.dp).clip(RoundedCornerShape(10.dp)))
             }
             if (!unlocked) {

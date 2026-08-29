@@ -22,5 +22,10 @@
   { "id": 101, "title": "哈尔滨团圆饭", "image": "harbin_001", "rows": 6, "columns": 7, "timeLimit": 480, "unlockRequirement": 0, "rewardCoins": 40, "group": "哈尔滨之旅", "snapDistanceRatio": 0.09, "autoPlaceOnRelease": false },
   { "id": 102, "title": "索菲亚教堂", "image": "harbin_002", "rows": 6, "columns": 7, "timeLimit": 480, "unlockRequirement": 1, "rewardCoins": 45, "group": "哈尔滨之旅", "snapDistanceRatio": 0.08, "autoPlaceOnRelease": false },
   { "id": 103, "title": "中央大街合影", "image": "harbin_003", "rows": 6, "columns": 7, "timeLimit": 480, "unlockRequirement": 2, "rewardCoins": 50, "group": "哈尔滨之旅", "snapDistanceRatio": 0.07, "autoPlaceOnRelease": false },
-  { "id": 104, "title": "太阳岛合影", "image": "harbin_004", "rows": 6, "columns": 7, "timeLimit": 480, "unlockRequirement": 3, "rewardCoins": 55, "group": "哈尔滨之旅", "snapDistanceRatio": 0.07, "autoPlaceOnRelease": false }
+  { "id": 104, "title": "太阳岛合影", "image": "harbin_004", "rows": 6, "columns": 7, "timeLimit": 480, "unlockRequirement": 3, "rewardCoins": 55, "group": "哈尔滨之旅", "snapDistanceRatio": 0.07, "autoPlaceOnRelease": false },
+  { "id": 105, "title": "树荫小憩", "image": "harbin_005", "rows": 5, "columns": 5, "timeLimit": 420, "unlockRequirement": 4, "rewardCoins": 60, "group": "哈尔滨之旅", "snapDistanceRatio": 0.10, "autoPlaceOnRelease": false },
+  { "id": 106, "title": "教堂前留影", "image": "harbin_006", "rows": 5, "columns": 6, "timeLimit": 450, "unlockRequirement": 5, "rewardCoins": 65, "group": "哈尔滨之旅", "snapDistanceRatio": 0.09, "autoPlaceOnRelease": false },
+  { "id": 107, "title": "白鸽与笑脸", "image": "harbin_007", "rows": 6, "columns": 6, "timeLimit": 480, "unlockRequirement": 6, "rewardCoins": 70, "group": "哈尔滨之旅", "snapDistanceRatio": 0.08, "autoPlaceOnRelease": false },
+  { "id": 108, "title": "广场喂鸽", "image": "harbin_008", "rows": 6, "columns": 7, "timeLimit": 510, "unlockRequirement": 7, "rewardCoins": 75, "group": "哈尔滨之旅", "snapDistanceRatio": 0.08, "autoPlaceOnRelease": false },
+  { "id": 109, "title": "农场合影", "image": "harbin_009", "rows": 6, "columns": 7, "timeLimit": 540, "unlockRequirement": 8, "rewardCoins": 80, "group": "哈尔滨之旅", "snapDistanceRatio": 0.07, "autoPlaceOnRelease": false }
 ]
